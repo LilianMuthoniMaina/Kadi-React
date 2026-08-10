@@ -3,6 +3,7 @@ import Home from "./Screens/game/Home";
 import {useState} from "react";
 import Login from "./Screens/auth/Login";
 import SignUp from "./Screens/auth/SignUp";
+import ForgotPassword from "./Screens/auth/ForgotPassword"
 
 import Test from "./Screens/game/Test";
 import GlobalContext from "./GlobalContext";
@@ -22,8 +23,9 @@ function App() {
         <BrowserRouter>
         <Routes>
             <Route path="/Login" element={<Login />} />
-            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/game" element={<Home />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/game/test" element={<Test />} />
             </Routes>
             </BrowserRouter>
