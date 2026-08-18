@@ -42,7 +42,7 @@ function SignUp() {
   }
   return (
       <div className="bg-[#0e0e0e] min-h-screen w-full relative overflow-hidden flex items-center justify-center px-4 py-20">
-        <div className="asolute bg-[rgba(142,255,113,0.05)] blur-[60px] right-[-20px] rounded-[12px] size-[500px] top-[-90px] pointer-events-none" />
+        <div className="absolute bg-[rgba(142,255,113,0.05)] blur-[60px] right-[-20px] rounded-[12px] size-[500px] top-[-90px] pointer-events-none" />
         <div className="absolute bg-[rgba(255,112,115,0.05)] blur-[60px] bottom-[-90px] left-[20px] rounded-[-12px] size-[600px] pointer-events-none" />
         <div className="relative w-full max-w-[448px] flex flex-col gap-6">
           {/*the card */}
@@ -64,8 +64,8 @@ function SignUp() {
                 </label>
                 <div className="relative">
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                   <svg width="20" height="20" viewbox="0 0 20 20" fill="none">
-                    <circle cx="10" cy="6.5" r="3.5" stroke="#ADAAAA" strokewidth="1.5" />
+                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="6.5" r="3.5" stroke="#ADAAAA" strokeWidth="1.5" />
                     <path d="M3 17c0-3.3 3.13-6 7-6s7 2.7 7 6" stroke="#ADAAAA" strokeWidth="1.15" strokeLinecap="round" />
                     </svg></div>
                     <input
@@ -84,7 +84,7 @@ function SignUp() {
                   E-mail address
                 </label>
                 <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translation-y-1/2 pointer-events-none">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path d="M2.5 5.833A1.667 1.667 0 014.167 4.167h11.666A1.667 1.667 0 0117.5 5.833v8.334a1.667 1.667 0 01-1.667 1.666H4.167A1.667 1.667 0 012.5 14.167V5.833z" stroke="#ADAAAA" strokeWidth="1.5" />
                       <path d="M2.5 5.833L10 10.833l7.5-5" stroke="#ADAAAA" strokeWidth="1.5" />
@@ -127,8 +127,8 @@ function SignUp() {
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-1 size-4 rounded-[2px bg-[#262626] border border-[rgba(73,72,71,0.5)] accent-[#8eff71]" />
-                <p className="text-[@adaaaa] text-[11px] leading-[15px]">
+                  className="mt-1 size-4 rounded-[2px] bg-[#262626] border border-[rgba(73,72,71,0.5)] accent-[#8eff71]" />
+                <p className="text-[#adaaaa] text-[11px] leading-[15px]">
                   I agree to the <span className="text-[#8eff71]">Terms of Engagement</span> and
                   acknowledge the high-stakes risk protocols.
                 </p>
@@ -157,8 +157,8 @@ function SignUp() {
               SECURITY ENCRYPTED
             </span>
             <div className="flex gap-1">
-              <div className="size-1 rounded-full bg-[rgba(142,255,113,0.4)" />
-              <div className="size-1 rounded-full bg-[rgba(142, 255,133,0.2" />
+              <div className="size-1 rounded-full bg-[rgba(142,255,113,0.4)]" />
+              <div className="size-1 rounded-full bg-[rgba(142, 255,113,0.2)]" />
               <div className="size-1 rounded-full bg-[rgba(142,255,113,0.1)]" />
             </div>
             <span className="text-[9px] text-[rgba(173,170,170,0.4)] tracking-[3.6px] uppercase">
