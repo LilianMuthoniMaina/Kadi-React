@@ -1,13 +1,114 @@
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
-const dummyPlayerHand = [
-    { rank: 'A', suit: '♠️', isRed: false },
-    { rank: 'K', suit:'❤️', isRed: true }
-]
-const dummyOpponentBack = true
+const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+const SUITS = ['♠️', '❤️', '♦️', '♣️']
+const RED_SUITS = new Set(['❤️', '♦️'])
+
+function createDeck() {
+    const deck = []
+    for (const suit of SUITS){
+        for(const rank of RANKS){
+            deck.push({rank, suit, isRed: RED_SUITS.has(suit) })
+        }
+    }
+    return deck;
+}
+
+function shuffle(arr){
+    const a = [...arr]
+    for(let i=a.length - 1; i>0; i--){
+        const j = Math.floor(Math.random() * (i +1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function rankVal(r) {
+    const m = {
+        '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8,
+        '9':9, '10':10, 'J':11, 'Q':12, 'K':13, 'A':14
+    }
+    return m[r]
+}
+
+function combos(arr, k) {
+    if(k === 0) return [[]]
+    if(arr.length < k) return []
+    const [h, ...t] = arr
+    return [
+        ...combos(t, k-1).map(c => [h, ...c]),
+        ...combos(t, k),
+    ]
+}
+
+function score5(cards) {
+    const rv = cards.map(c => rankVal(c.rank)).sort((a,b) => b - a)
+    const suits = cards.map(c => c.suit)
+    const isFlush = new Set(suits).size === 1
+    const isStraight = rv[0] - rv[4] === 4 && new Set(rv).size === 5
+    const isAceLow = JSON.stringify(rv) === JSON.stringify([14,5,4,3,2])
+    const isSt = isStraight || isAceLow
+
+    const cnt = {}
+    for(const r of rv) cnt[r] = (cnt[r] ?? 0) + 1
+    const groups = Object.values(cnt).sort((a,b) => b-a)
+    const top = rv[0]
+
+    if (isFlush && isSt) return { score: 8000000 + top, name: top === 14 && isStraight ? 'Royal Flush' : 'Straight Flush' };
+  if (groups[0] === 4) return { score: 7000000 + top, name: 'Four of a Kind' };
+  if (groups[0] === 3 && groups[1] === 2) return { score: 6000000 + top, name: 'Full House' };
+  if (isFlush) return { score: 5000000 + top, name: 'Flush' };
+  if (isSt) return { score: 4000000 + top, name: 'Straight' };
+  if (groups[0] === 3) return { score: 3000000 + top, name: 'Three of a Kind' };
+  if (groups[0] === 2 && groups[1] === 2) return { score: 2000000 + top, name: 'Two Pair' };
+  if (groups[0] === 2) return { score: 1000000 + top, name: 'Pair' };
+  return { score: top, name: 'High Card' };
+}
+
+function bestHand(cards){
+    if (cards.length <5){
+        const rv = cards.map(c => rankVal(c.rank)).sort((a, b) => b-a)
+        const cnt = {}
+        for (const r of rv) cnt[r] = (cnt[r] ?? 0) + 1;
+    const groups = Object.values(cnt).sort((a, b) => b - a);
+    if (groups[0] >= 3) return { score: 3000000 + rv[0], name: 'Three of a Kind' };
+    if (groups[0] === 2 && groups[1] === 2) return { score: 2000000 + rv[0], name: 'Two Pair' };
+    if (groups[0] === 2) return { score: 1000000 + rv[0], name: 'Pair' };
+    return { score: rv[0], name: 'High Card' };
+  }
+  let best = { score: -1, name: 'High Card' };
+  for (const combo of combos(cards, 5)) {
+    const r = score5(combo);
+    if (r.score > best.score) best = r;
+  }
+  return best;
+
+    
+}
+
+{/*Game pArt*/}
+function initGame(){
+    const deck = shuffle(createDeck())
+    const playerHand = [deck[0], deck[2]]
+    const opponentHand = [deck[1], deck[3]]
+    const communityCards = deck.slice(4,9)
+
+    return {
+        playerHand,
+        opponentHand,
+        communityCards,
+        visibleCommunity: 0,
+        pot: 200,
+        playerChips: 1900,
+        phase: 'preflop'
+    }
+}
 
 export default function PokerGame(){
     const navigate = useNavigate()
+    const [game, setGame] = useState(initGame)
+    const playerBest = bestHand([...game.playerHand, ...game.communityCards.slice(0, game.visibleCommunity)])
 
     return(
         <div className="bg-[#0e0e0e] min-h-screen w-full flex flex-col relative overflow-hidden">
@@ -20,7 +121,7 @@ export default function PokerGame(){
                     onClick={() => navigate('/game')}
                     className="flex items-center gap-2 text-[rgba(173,170,170,0.6)]">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                        <path d="M-15 181-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLineJoin="round" />
+                        <path d="M-15 181-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="text-10[px] tracking-[1.5px] uppercase">Lobby</span>
                 </button>
@@ -78,7 +179,7 @@ export default function PokerGame(){
                 </div>
 
                 <div className="flex gap-2">
-                    {dummyPlayerHand.map((card, i) => (
+                    {game.playerHand.map((card, i) => (
                         <div key={i} className="w-[52px] h-[76px] rounded-[8px] bg-[#f5f4ef] flex flex-col p-1.5">
                             <span className={`font-bold text-sm ${card.isRed ? 'text-[#d32f2f]' : 'text-[#1a1919]'}`}>{card.rank}</span>
                             <span className={`text-base ${card.isRed ? 'text-[#d32f2f]' : 'text-[#1a1919]'}`}>{card.suit}</span>
