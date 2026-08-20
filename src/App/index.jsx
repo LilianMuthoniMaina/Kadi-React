@@ -8,6 +8,7 @@ import ForgotPassword from "./Screens/auth/ForgotPassword"
 import Test from "./Screens/game/Test";
 import GlobalContext from "./GlobalContext";
 import PokerGame from "./Screens/game/PokerGame";
+import Profile from "./Screens/game/Profile";
 
 function App() {
     const [token, setToken] = useState(null);
@@ -29,6 +30,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/game/test" element={<Test />} />
             <Route path="/game/play" element={<PokerGame />} />
+            <Route path="/game/profile" element={<Profile />} />
             </Routes>
             </BrowserRouter>
             </GlobalContext.Provider>
